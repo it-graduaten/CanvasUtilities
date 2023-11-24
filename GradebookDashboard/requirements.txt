@@ -1,2 +1,5 @@
 dash
 pandas
+canvasapi
+dash_bootstrap_components
+xlsxwriter
