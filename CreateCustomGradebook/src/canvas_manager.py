@@ -31,7 +31,8 @@ class CanvasManager:
         assignment_groups = self.course.get_assignment_groups()
         assignment_group_list = []
         for assignment_group in assignment_groups:
-            assignment_group_list.append(CustomAssignmentGroup(assignment_group.id, assignment_group.name))
+            assignment_group_list.append(
+                CustomAssignmentGroup(assignment_group.id, assignment_group.name, assignment_group.group_weight))
         return assignment_group_list
 
     @staticmethod

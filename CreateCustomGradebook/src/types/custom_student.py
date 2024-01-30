@@ -3,6 +3,7 @@ from typing import List
 from canvasapi.assignment import Assignment
 
 from .custom_submission import CustomSubmission
+from .custom_assignmentgroup import CustomAssignmentGroup
 
 
 class CustomStudent:
@@ -59,3 +60,15 @@ class CustomStudent:
         if all_missing:
             return "NA"
         return total
+
+    def get_percentage_for_assignment_group(self, group: CustomAssignmentGroup):
+        total = self.get_total_for_assignment_group(group)
+        if total == "NA":
+            return "NA"
+
+        points_possible = group.calculate_total_points_possible()
+
+        if points_possible == 0:
+            return "NA"
+
+        return total / points_possible

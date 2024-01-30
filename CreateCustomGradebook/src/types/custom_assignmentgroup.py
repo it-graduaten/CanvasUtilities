@@ -7,11 +7,13 @@ class CustomAssignmentGroup:
     id: int
     name: str
     assignments: List[Assignment]
+    group_weight: int
 
-    def __init__(self, group_id: int, name: str):
+    def __init__(self, group_id: int, name: str, group_weight: int):
         self.id = group_id
         self.name = name
         self.assignments = []
+        self.group_weight = group_weight
 
     def calculate_total_points_possible(self):
         total = 0

@@ -101,6 +101,65 @@ class ExcelManager:
         self.workbook.close()
 
     def create_gradebook(self, assignment_groups: List[CustomAssignmentGroup], students: List[CustomStudent]):
+        self.write_assignments(assignment_groups, students)
+        self.write_group_totals(assignment_groups, students)
+        self.write_opo_totals(assignment_groups, students)
+
+    def write_opo_totals(self, assignment_groups, students):
+        self.worksheet.write(0, self.column_counter, f'Totaal - OPO (100)')
+        self.worksheet.write(1, self.column_counter, 100)
+        self.worksheet.write(0, self.column_counter + 1, f'Totaal - OPO (20)')
+        self.worksheet.write(1, self.column_counter + 1, 20)
+
+        group_totals = []
+        group_weights = []
+        for group in assignment_groups:
+            group_totals.append(group.calculate_total_points_possible())
+            group_weights.append(group.group_weight)
+
+        for student in students:
+            student_totals = []
+            for group in assignment_groups:
+                student_total_for_group = student.get_total_for_assignment_group(group)
+                student_totals.append(student_total_for_group)
+
+            # If all student_totals are 'NA', opo_total is 'NA'
+            opo_total = 0
+            if all(student_total == "NA" for student_total in student_totals):
+                opo_total = "NA"
+            else:
+                # Calculate the opo_total
+                for index, student_total in enumerate(student_totals):
+                    if student_total == "NA":
+                        continue
+                    opo_total += student_total / group_totals[index] * group_weights[index]
+
+            # Write the opo_total to the Excel sheet
+            self.worksheet.write(student.row_in_excel_file, self.column_counter, opo_total)
+            self.worksheet.write(student.row_in_excel_file, self.column_counter + 1, opo_total / 5)
+
+    def write_group_totals(self, assignment_groups, students):
+        for group in assignment_groups:
+            self.worksheet.write(0, self.column_counter, f'Totaal - {group.name}')
+            self.worksheet.write(1, self.column_counter, group.calculate_total_points_possible())
+
+            for student in students:
+                self.worksheet.write(student.row_in_excel_file, self.column_counter,
+                                     student.get_total_for_assignment_group(group))
+
+            self.column_counter += 1
+
+            self.worksheet.write(0, self.column_counter, f'Percentage - {group.name}')
+            self.worksheet.write(1, self.column_counter, str(group.group_weight) + "% van het totaal")
+
+            for student in students:
+                self.worksheet.write(student.row_in_excel_file, self.column_counter,
+                                     student.get_percentage_for_assignment_group(group),
+                                     self.workbook.add_format({'num_format': '0%'}))
+
+            self.column_counter += 1
+
+    def write_assignments(self, assignment_groups, students):
         for group in assignment_groups:
             for assignment in group.assignments:
                 self.worksheet.write(0, self.column_counter, assignment.name)
@@ -112,14 +171,3 @@ class ExcelManager:
                                          grade)
 
                 self.column_counter += 1
-
-        for group in assignment_groups:
-            self.worksheet.write(0, self.column_counter, f'Groepstotaal - {group.name}')
-            self.worksheet.write(1, self.column_counter, group.calculate_total_points_possible())
-
-            for student in students:
-                self.worksheet.write(student.row_in_excel_file, self.column_counter,
-                                     student.get_total_for_assignment_group(group))
-
-            self.column_counter += 1
-        pass
