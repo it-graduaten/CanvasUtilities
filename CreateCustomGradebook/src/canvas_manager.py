@@ -49,5 +49,4 @@ class CanvasManager:
         for submission in submissions:
             for student in students:
                 if submission.user_id == student.canvas_id:
-                    print("Adding submission to student")
                     student.add_submission(CustomSubmission(assignment_group_id, assignment, submission))
