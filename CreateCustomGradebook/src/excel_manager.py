@@ -136,7 +136,7 @@ class ExcelManager:
 
             # Write the opo_total to the Excel sheet
             self.worksheet.write(student.row_in_excel_file, self.column_counter, opo_total)
-            self.worksheet.write(student.row_in_excel_file, self.column_counter + 1, opo_total / 5)
+            self.worksheet.write(student.row_in_excel_file, self.column_counter + 1, opo_total / 5 if opo_total != "NA" else "NA")
 
     def write_group_totals(self, assignment_groups, students):
         for group in assignment_groups:
