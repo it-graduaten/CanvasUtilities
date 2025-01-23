@@ -1,25 +1,9 @@
 const DATES_WITH_TIMES = [
     {
-        date: "20-11-2024",
+        date: "08-01-2025",
         startTime: "08:30",
-        endTime: "12:00",
-        timePerSlot: 5,
-        location: "Online via MS Teams",
-        dateId: null
-    },
-    {
-        date: "21-11-2024",
-        startTime: "16:00",
-        endTime: "17:30",
-        timePerSlot: 5,
-        location: "Online via MS Teams",
-        dateId: null
-    },
-    {
-        date: "22-11-2024",
-        startTime: "16:00",
-        endTime: "17:30",
-        timePerSlot: 5,
+        endTime: "15:00",
+        timePerSlot: 15,
         location: "Online via MS Teams",
         dateId: null
     }
@@ -133,7 +117,7 @@ function createSlots() {
     // Wait for the modal to open
     setTimeout(() => {
         const inputTitle = document.querySelector('input#Item_Title');
-        inputTitle.value = 'Trajectcoaching';
+        inputTitle.value = 'Mondeling evaluatie';
 
         const inputStartTime = document.querySelector('input#Item_StartTime');
         inputStartTime.value = slotStartTime;
