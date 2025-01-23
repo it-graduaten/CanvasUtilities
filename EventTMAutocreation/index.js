@@ -1,13 +1,34 @@
+////// EXAMPLE VALUE: DATES_WITH_TIMES
+// const DATES_WITH_TIMES = [
+//     {
+//         date: "21-11-2024",
+//         startTime: "09:30",
+//         endTime: "18:00",
+//         timePerSlot: 5,
+//         location: "Online via MS Teams",
+//         dateId: null
+//     },
+//     {
+//         date: "22-11-2024",
+//         startTime: "09:30",
+//         endTime: "18:00",
+//         timePerSlot: 5,
+//         location: "Online via MS Teams",
+//         dateId: null
+//     }
+// ];
+
 const DATES_WITH_TIMES = [
     {
-        date: "08-01-2025",
-        startTime: "08:30",
-        endTime: "15:00",
-        timePerSlot: 15,
+        date: "21-11-2024",
+        startTime: "09:30",
+        endTime: "10:00",
+        timePerSlot: 5,
         location: "Online via MS Teams",
         dateId: null
-    }
+    },
 ];
+const TIMEOUT = 1000;
 
 let currentDate = 0;
 let currentSlotDateIndex = 0;
@@ -40,7 +61,7 @@ function minutesToTimeString(minutes) {
 function createDate() {
     if (currentDate >= DATES_WITH_TIMES.length) {
         console.log("All dates created. Updating IDs...");
-        setTimeout(updateDateIds, 1000); // Wait for the UI to update before fetching IDs
+        setTimeout(updateDateIds, TIMEOUT); // Wait for the UI to update before fetching IDs
         return;
     }
 
@@ -59,8 +80,8 @@ function createDate() {
         saveButton.click();
 
         currentDate++;
-        setTimeout(createDate, 1000); // Wait for the modal to close and start the next date
-    }, 1000);
+        setTimeout(createDate, TIMEOUT); // Wait for the modal to close and start the next date
+    }, TIMEOUT);
 }
 
 /**
@@ -84,7 +105,7 @@ function updateDateIds() {
     });
 
     console.log("Date IDs updated:", DATES_WITH_TIMES);
-    setTimeout(createSlots, 1000); // Proceed to create slots after updating IDs
+    setTimeout(createSlots, TIMEOUT); // Proceed to create slots after updating IDs
 }
 
 /**
@@ -104,7 +125,7 @@ function createSlots() {
     if (currentSlot >= numberOfSlots) {
         currentSlot = 0;
         currentSlotDateIndex++;
-        setTimeout(createSlots, 1000); // Move to the next date
+        setTimeout(createSlots, TIMEOUT); // Move to the next date
         return;
     }
 
@@ -132,8 +153,8 @@ function createSlots() {
         saveButton.click();
 
         currentSlot++;
-        setTimeout(createSlots, 1000); // Wait for the modal to close and start the next slot
-    }, 1000);
+        setTimeout(createSlots, TIMEOUT); // Wait for the modal to close and start the next slot
+    }, TIMEOUT);
 }
 
 // Start the process
