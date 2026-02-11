@@ -62,12 +62,18 @@ def ask_horizontal_or_vertical():
                 len(types) - 1))
 
 
-def create_csv_file(all_sections, course_id, include_section, include_student_number, include_student_name):
+def create_csv_file(all_sections, course_id, include_section, include_student_number, include_student_name, include_id):
     # Create the csv file
     with open(f"studenten-{course_id}.csv", "w") as f:
         header = ""
         if include_section:
             header += "Klasgroep,"
+        if include_student_number:
+            header += "Studentennummer,"
+        if include_student_name:
+            header += "Naam,"
+        if include_id:
+            header += "ID,"
         if include_student_number:
             header += "Studentennummer,"
         if include_student_name:
@@ -91,10 +97,15 @@ def create_csv_file(all_sections, course_id, include_section, include_student_nu
                     line += f"{student_number},"
                 if include_student_name:
                     line += f"{student['name']},"
+                if include_id:
+                    line += f"{student['id']},"
                 # Remove last comma from line
                 line = line[:-1]
                 # Add the line to the file
-                f.write(line)
+                try:
+                    f.write(line)
+                except Exception as e:
+                    print(f"Error writing line to file: {e}")
     f.close()
 
 
@@ -120,7 +131,7 @@ def ask_sections_to_include(all_sections):
     return sections_to_include
 
 
-def create_excel_file(all_sections, course_id, include_section, include_student_number, include_student_name,
+def create_excel_file(all_sections, course_id, include_section, include_student_number, include_student_name, include_id,
                       vertical_horizontal):
     # Create the Excel file
     wb = openpyxl.Workbook()
@@ -158,6 +169,9 @@ def create_excel_file(all_sections, course_id, include_section, include_student_
                     col += 1
                 if include_student_name:
                     sheet.cell(row=row, column=col).value = student['name']
+                    col += 1
+                if include_id:
+                    sheet.cell(row=row, column=col).value = student['id']
                     col += 1
                 sheet.cell(row=row, column=col).value = "Ja" if student['enrollments'][0][
                                                                     'enrollment_state'] == "active" else "Nee"
@@ -221,11 +235,12 @@ if __name__ == "__main__":
     include_sections = ask_yes_no("Do you want to include sections?")
     include_number = ask_yes_no("Do you want to include student numbers?")
     include_name = ask_yes_no("Do you want to include student names?")
+    include_id = ask_yes_no("Do you want to include student ids?")
     if file_type == "csv":
-        create_csv_file(sections, canvas_course_id, include_sections, include_number, include_name)
+        create_csv_file(sections, canvas_course_id, include_sections, include_number, include_name, include_id)
     elif file_type == "excel":
         vertical_horizontal = ask_horizontal_or_vertical()
-        create_excel_file(sections, canvas_course_id, include_sections, include_number, include_name,
+        create_excel_file(sections, canvas_course_id, include_sections, include_number, include_name, include_id,
                           vertical_horizontal)
     else:
         raise ValueError("File type should be 'csv' or 'excel'")
